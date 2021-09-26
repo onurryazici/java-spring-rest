@@ -6,6 +6,7 @@ import com.onurryazici.SpringApp.dto.UserViewDTO;
 import com.onurryazici.SpringApp.service.UserService;
 import com.onurryazici.SpringApp.shared.GenericResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,16 @@ public class UserAPI {
         final UserViewDTO  user = userService.updateUser(id,userUpdateDTO);
         return ResponseEntity.ok(user);
     }
+    @DeleteMapping("v1/deleteUser/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new GenericResponse("User successfully deleted"));
+    }
 
+    @GetMapping("v1/user/pagination")
+    public ResponseEntity<List<UserViewDTO>> pagination(Pageable pageable){
+        final List<UserViewDTO> users = userService.pagination(pageable);
+        return ResponseEntity.ok(users);
+    }
 
 }

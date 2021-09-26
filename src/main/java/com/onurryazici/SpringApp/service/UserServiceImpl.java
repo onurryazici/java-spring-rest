@@ -8,7 +8,9 @@ import com.onurryazici.SpringApp.model.User;
 import com.onurryazici.SpringApp.repository.UserRepository;
 import com.onurryazici.SpringApp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -44,5 +46,18 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userUpdateDTO.getLastName());
         final User updatedUser = userRepository.save(user);
         return UserViewDTO.of(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        final User user = userRepository.findById(id).orElseThrow(()->new NotFoundException(("There is no such user")));
+        userRepository.deleteById(user.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<UserViewDTO> pagination(Pageable pageable) {
+        return userRepository.findAll(pageable).stream().map(UserViewDTO::of).collect(Collectors.toList());
     }
 }
