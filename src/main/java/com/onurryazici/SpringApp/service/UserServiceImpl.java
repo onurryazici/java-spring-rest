@@ -1,6 +1,7 @@
 package com.onurryazici.SpringApp.service;
 
 import com.onurryazici.SpringApp.dto.UserCreateDTO;
+import com.onurryazici.SpringApp.dto.UserUpdateDTO;
 import com.onurryazici.SpringApp.dto.UserViewDTO;
 import com.onurryazici.SpringApp.exception.NotFoundException;
 import com.onurryazici.SpringApp.model.User;
@@ -8,6 +9,7 @@ import com.onurryazici.SpringApp.repository.UserRepository;
 import com.onurryazici.SpringApp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,5 +34,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserViewDTO> getAllUsers() {
         return userRepository.findAll().stream().map(UserViewDTO::of).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public UserViewDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
+        final User user= userRepository.findById(id).orElseThrow( ()->new NotFoundException("This user does not exits"));
+        user.setFirstName(userUpdateDTO.getFirstName());
+        user.setLastName(userUpdateDTO.getLastName());
+        final User updatedUser = userRepository.save(user);
+        return UserViewDTO.of(updatedUser);
     }
 }
