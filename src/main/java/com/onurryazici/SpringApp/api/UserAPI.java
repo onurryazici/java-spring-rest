@@ -5,7 +5,6 @@ import com.onurryazici.SpringApp.dto.UserViewDTO;
 import com.onurryazici.SpringApp.service.UserService;
 import com.onurryazici.SpringApp.shared.GenericResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class UserAPI {
         return  ResponseEntity.ok(user);
     }
 
-    @PostMapping("v1/user")
+    @PostMapping("v1/addUser")
     public ResponseEntity<?> createUser(@RequestBody UserCreateDTO userCreateDTO){
         userService.createUser(userCreateDTO);
         return ResponseEntity.ok(new GenericResponse("User succesfully created"));
