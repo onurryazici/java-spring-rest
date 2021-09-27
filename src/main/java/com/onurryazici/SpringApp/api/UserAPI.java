@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -40,7 +41,7 @@ public class UserAPI {
         return  ResponseEntity.ok(user);
     }
     @PostMapping("v1/addUser")
-    public ResponseEntity<?> createUser(@RequestBody UserCreateDTO userCreateDTO){
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateDTO userCreateDTO){
         userService.createUser(userCreateDTO);
         return ResponseEntity.ok(new GenericResponse("User succesfully created"));
     }
